@@ -1,325 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Be My Valentine?</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #ffe6e6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .container {
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-        h1 {
-            color: #ff4d4d;
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 1.5em;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        #yesBtn {
-            background-color: #ff69b4;
-            color: white;
-            box-shadow: 0 0 10px #ff69b4;
-        }
-        #yesBtn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px #ff69b4;
-        }
-        #noBtn {
-            background-color: #808080;
-            color: white;
-            position: relative;
-        }
-        #fireworks {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            display: none;
-        }
-        .firework {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            transform: rotate(-45deg);
-            animation: explode 1s ease-out forwards;
-            box-shadow: 0 0 10px var(--heart-color);
-        }
-        .firework:before,
-        .firework:after {
-            content: "";
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-        }
-        .firework:before {
-            top: -5px;
-            left: 0;
-        }
-        .firework:after {
-            top: 0;
-            left: -5px;
-        }
-        @keyframes explode {
-            0% {
-                transform: translate(0, 0) rotate(-45deg) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--dx), var(--dy)) rotate(-45deg) scale(0);
-                opacity: 0;
-            }
-        }
-        #romanticMessage {
-            display: none;
-            font-size: 2em;
-            color: #ff4d4d;
-            margin-top: 20px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-        }
-        /* Heart animations */
-        .heart {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #ff69b4;
-            transform: rotate(-45deg);
-            animation: float 5s linear infinite;
-            opacity: 0.8;
-        }
-        .heart:before,
-        .heart:after {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #ff69b4;
-            border-radius: 50%;
-        }
-        .heart:before {
-            top: -10px;
-            left: 0;
-        }
-        .heart:after {
-            top: 0;
-            left: -10px;
-        }
-        @keyframes float {
-            0% {
-                bottom: -100px;
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 0.8;
-            }
-            100% {
-                bottom: 100vh;
-                opacity: 0;
-            }
-        }
-        /* Confetti */
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 3px;
-            animation: confettiAnim 2s ease-out forwards;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        }
-        @keyframes confettiAnim {
-            0% {
-                transform: translate(0, 0) rotate(var(--rot));
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--dx), var(--dy)) rotate(var(--rot-end));
-                opacity: 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:title" content="A Special Message For You 💖" />
+  <meta property="og:description" content="Someone planned something really special just for you… ✨" />
+  <meta property="og:image" content="preview.jpg" />
+  <meta property="og:type" content="website" />
+  <title>Will You Be My Valentine? 💖</title>
+
+  <style>
+    * { box-sizing: border-box; font-family: "Poppins", sans-serif; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+    }
+
+    /* ================= VIDEO BACKGROUND ================= */
+    video.bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -3;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: -2;
+    }
+
+    /* ================= MOONLIGHT ================= */
+    .moon {
+      position: absolute;
+      top: 6%;
+      right: 8%;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff, #bbb, transparent 70%);
+      box-shadow: 0 0 60px rgba(255, 255, 255, 0.6);
+      animation: pulse 6s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { box-shadow: 0 0 40px rgba(255,255,255,0.5); }
+      to { box-shadow: 0 0 90px rgba(255,255,255,0.9); }
+    }
+
+    /* ================= CANDLES ================= */
+    .candles {
+      position: absolute;
+      bottom: 8%;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      pointer-events: none;
+    }
+
+    .candle {
+      width: 12px;
+      height: 60px;
+      background: linear-gradient(#ffd6a5, #ff8c42);
+      border-radius: 6px;
+      position: relative;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .candle::before {
+      content: "";
+      position: absolute;
+      top: -16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 20px;
+      background: radial-gradient(circle, #fff3b0, orange, transparent 70%);
+      border-radius: 50%;
+      animation: flicker 0.4s infinite alternate;
+    }
+
+    @keyframes flicker {
+      from { transform: translateX(-50%) scale(1); opacity: 0.8; }
+      to { transform: translateX(-50%) scale(1.2); opacity: 1; }
+    }
+
+    @keyframes float {
+      from { transform: translateY(0px); }
+      to { transform: translateY(-8px); }
+    }
+
+    /* ================= MAIN CARD ================= */
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      width: 92%;
+      max-width: 420px;
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 40px rgba(255, 0, 120, 0.3);
+      z-index: 10;
+    }
+
+    h1 { margin-top: 0; font-size: 1.7rem; }
+    p { font-size: 1.05rem; opacity: 0.9; min-height: 60px; }
+
+    /* ================= BUTTONS ================= */
+    .buttons {
+      margin-top: 20px;
+      position: relative;
+      height: 140px;
+    }
+
+    button {
+      padding: 14px 22px;
+      font-size: 1rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      transition: 0.3s ease;
+      user-select: none;
+    }
+
+    #yesBtn {
+      background: linear-gradient(135deg, #ff4b8b, #ff0066);
+      color: white;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 18px rgba(255, 0, 100, 0.8);
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { box-shadow: 0 0 15px rgba(255,0,100,0.7); }
+      to { box-shadow: 0 0 40px rgba(255,0,150,1); }
+    }
+
+    #noBtn {
+      background: #333;
+      color: white;
+      left: 10%;
+      top: 70px;
+    }
+
+    /* ================= ANGEL ================= */
+    .angel {
+      position: absolute;
+      top: -140px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 80px;
+      animation: angelDrop 2s ease forwards;
+    }
+
+    @keyframes angelDrop {
+      from { top: -140px; opacity: 0; }
+      to { top: 10px; opacity: 1; }
+    }
+
+    .angel.flyAway {
+      animation: angelLeave 1.5s ease forwards;
+    }
+
+    @keyframes angelLeave {
+      from { opacity: 1; transform: translateX(-50%) scale(1); }
+      to { opacity: 0; transform: translateX(-50%) scale(2) translateY(-200px); }
+    }
+
+    /* ================= FIREWORKS ================= */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 100;
+      display: none;
+    }
+
+    /* ================= RING ANIMATION ================= */
+    .ring {
+      position: absolute;
+      font-size: 80px;
+      animation: ringPop 2s ease forwards;
+      pointer-events: none;
+    }
+
+    @keyframes ringPop {
+      0% { transform: scale(0) translateY(40px); opacity: 0; }
+      40% { transform: scale(1.4) translateY(0); opacity: 1; }
+      100% { transform: scale(1) translateY(-20px); opacity: 1; }
+    }
+
+    /* ================= SECOND SCREEN ================= */
+    .second-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      z-index: 200;
+      color: white;
+      padding: 20px;
+    }
+
+    .second-card {
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(10px);
+      padding: 26px;
+      border-radius: 24px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 0 40px rgba(255, 0, 120, 0.4);
+    }
+
+    .second-card h2 { margin-top: 0; font-size: 1.6rem; }
+
+    /* ================= TYPEWRITER ================= */
+    .typewriter {
+      font-size: 1.05rem;
+      line-height: 1.5;
+      opacity: 0.95;
+      min-height: 70px;
+    }
+
+    /* ================= MOBILE ================= */
+    @media (max-width: 480px) {
+      h1 { font-size: 1.5rem; }
+      p { font-size: 0.95rem; }
+      button { padding: 12px 18px; font-size: 0.95rem; }
+      .angel { font-size: 64px; }
+      .ring { font-size: 64px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Will you be my Valentine, my love?</h1>
-        <div class="buttons">
-            <button id="yesBtn">Yes!</button>
-            <button id="noBtn">No</button>
-        </div>
-        <div id="romanticMessage"></div>
+
+  <!-- ======= BACKGROUND VIDEO (FIRST SCREEN) ======= -->
+  <video class="bg-video" id="bgVideo" autoplay muted loop playsinline>
+    <source src="bg1.mp4" type="video/mp4">
+  </video>
+  <div class="overlay"></div>
+
+  <!-- ======= MOON + CANDLES ======= -->
+  <div class="moon"></div>
+  <div class="candles">
+    <div class="candle"></div>
+    <div class="candle"></div>
+    <div class="candle"></div>
+    <div class="candle"></div>
+    <div class="candle"></div>
+  </div>
+
+  <!-- ======= ANGEL ======= -->
+  <div class="angel" id="angel">👼</div>
+
+  <!-- ======= MAIN CARD ======= -->
+  <div class="container" id="mainCard">
+    <h1>Dinner Under The Stars ✨</h1>
+    <p class="typewriter" id="message"></p>
+
+    <div class="buttons">
+      <button id="yesBtn">YES 💖</button>
+      <button id="noBtn">NO 🙄</button>
     </div>
-    <canvas id="fireworks"></canvas>
+  </div>
 
-    <script>
-        const noBtn = document.getElementById('noBtn');
-        const yesBtn = document.getElementById('yesBtn');
-        const container = document.querySelector('.container');
-        const fireworksCanvas = document.getElementById('fireworks');
-        const romanticMessage = document.getElementById('romanticMessage');
-        const ctx = fireworksCanvas.getContext('2d');
+  <!-- ======= FIREWORKS ======= -->
+  <canvas id="fireworks"></canvas>
 
-        fireworksCanvas.width = window.innerWidth;
-        fireworksCanvas.height = window.innerHeight;
+  <!-- ======= SECOND SCREEN ======= -->
+  <div class="second-screen" id="secondScreen">
+    <video class="bg-video" id="bgVideo2" autoplay muted loop playsinline>
+      <source src="bg2.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
 
-        // Make No button move away from mouse
-        document.addEventListener('mousemove', (e) => {
-            const rect = noBtn.getBoundingClientRect();
-            const btnCenterX = rect.left + rect.width / 2;
-            const btnCenterY = rect.top + rect.height / 2;
-            const dx = e.clientX - btnCenterX;
-            const dy = e.clientY - btnCenterY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
+    <div class="second-card">
+      <h2>You Just Made Me The Happiest Person Alive 😭💖</h2>
+      <p id="finalMessage"></p>
+    </div>
+  </div>
 
-            if (dist < 100) { // If mouse is close, move away
-                const angle = Math.atan2(dy, dx);
-                const moveDist = 50; // Move distance
-                noBtn.style.transform = `translate(${Math.cos(angle + Math.PI) * moveDist}px, ${Math.sin(angle + Math.PI) * moveDist}px)`;
-            } else {
-                noBtn.style.transform = 'translate(0, 0)';
-            }
+
+  <script>
+    /* ================= TYPEWRITER ================= */
+    const messageText = "Tonight, imagine we're sitting under the moonlight... candles glowing... hearts calm... and me looking at you thinking — life makes sense when you're in it. So... will you be my Valentine? 💖";
+    const messageEl = document.getElementById("message");
+    const angel = document.getElementById("angel");
+    let i = 0;
+
+    function typeWriter() {
+      if (i < messageText.length) {
+        messageEl.innerHTML += messageText.charAt(i);
+        i++;
+        setTimeout(typeWriter, 45);
+      } else {
+        angel.classList.add("flyAway");
+      }
+    }
+
+    setTimeout(typeWriter, 800);
+
+    /* ================= BUTTON LOGIC ================= */
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+    const mainCard = document.getElementById("mainCard");
+    const secondScreen = document.getElementById("secondScreen");
+    const bgVideo = document.getElementById("bgVideo");
+    const bgVideo2 = document.getElementById("bgVideo2");
+
+    let scale = 1;
+
+    function moveNoBtn() {
+      const rect = noBtn.getBoundingClientRect();
+      const x = Math.random() * (window.innerWidth - rect.width);
+      const y = Math.random() * (window.innerHeight - rect.height);
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+
+      scale += 0.08;
+      yesBtn.style.transform = `translateX(-50%) scale(${scale})`;
+    }
+
+    noBtn.addEventListener("mouseenter", moveNoBtn);
+    noBtn.addEventListener("touchstart", moveNoBtn);
+
+    /* ================= YES CLICK ================= */
+    yesBtn.addEventListener("click", () => {
+      launchFireworks();
+      spawnRing();
+      mainCard.style.display = "none";
+
+      bgVideo.pause();
+      bgVideo.style.display = "none";
+
+      secondScreen.style.display = "flex";
+      bgVideo2.play();
+
+      document.getElementById("finalMessage").innerText =
+        "I promise to make you smile on your bad days, laugh on your good ones, and always choose you — today, tomorrow, and every version of forever. 💍💖";
+    });
+
+    /* ================= RING SPAWN ================= */
+    function spawnRing() {
+      const ring = document.createElement("div");
+      ring.className = "ring";
+      ring.innerText = "💍";
+      ring.style.left = "50%";
+      ring.style.top = "50%";
+      ring.style.transform = "translate(-50%, -50%)";
+      document.body.appendChild(ring);
+      setTimeout(() => ring.remove(), 2500);
+    }
+
+    /* ================= FIREWORKS ENGINE ================= */
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function launchFireworks() {
+      canvas.style.display = "block";
+      for (let i = 0; i < 18; i++) createExplosion();
+      animateFireworks();
+    }
+
+    function createExplosion() {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height * 0.7;
+      const colors = ["#ff4d6d", "#ffb703", "#ffd6ff", "#c77dff", "#ff758f"];
+
+      for (let i = 0; i < 120; i++) {
+        particles.push({
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8,
+          life: 100,
+          color: colors[Math.floor(Math.random() * colors.length)]
         });
+      }
+    }
 
-        // Animate Yes button to expand and glow over time
-        let scale = 1;
-        let glow = 10;
-        const animateYes = () => {
-            scale += 0.001;
-            glow += 0.1;
-            yesBtn.style.transform = `scale(${scale})`;
-            yesBtn.style.boxShadow = `0 0 ${glow}px #ff69b4`;
-            requestAnimationFrame(animateYes);
-        };
-        animateYes();
+    function animateFireworks() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, index) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+        if (p.life <= 0) particles.splice(index, 1);
+      });
+      requestAnimationFrame(animateFireworks);
+    }
+  </script>
 
-        // On Yes click, show fireworks, confetti, and message
-        yesBtn.addEventListener('click', () => {
-            container.style.display = 'none';
-            fireworksCanvas.style.display = 'block';
-            romanticMessage.textContent = 'Yay! I love you so much! Happy Valentine's Day, my forever love! ❤️';
-            romanticMessage.style.display = 'block';
-
-            launchFireworks();
-            launchConfetti();
-        });
-
-        function launchFireworks() {
-            setInterval(createFirework, 300); // More frequent launches
-        }
-
-        function createFirework() {
-            const x = Math.random() * window.innerWidth;
-            const y = Math.random() * window.innerHeight;
-            const colors = ['#ff0000', '#ff69b4', '#ffd700', '#ff1493', '#db7093', '#ff00ff', '#ffff00', '#00ffff']; // Added more vibrant colors
-            for (let i = 0; i < 100; i++) { // More particles
-                const particle = document.createElement('div');
-                particle.className = 'firework';
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.backgroundColor = color;
-                particle.style.setProperty('--heart-color', color);
-                particle.style.left = `${x}px`;
-                particle.style.top = `${y}px`;
-                const size = Math.random() * 20 + 10; // Larger sizes: 10-30px
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.setProperty('--before-top', `-${size / 2}px`);
-                particle.style.setProperty('--after-left', `-${size / 2}px`);
-                const dx = (Math.random() - 0.5) * 300; // Larger spread
-                const dy = (Math.random() - 0.5) * 300;
-                particle.style.setProperty('--dx', `${dx}px`);
-                particle.style.setProperty('--dy', `${dy}px`);
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 1000);
-            }
-        }
-
-        function launchConfetti() {
-            setInterval(createConfetti, 400);
-        }
-
-        function createConfetti() {
-            const x = Math.random() * window.innerWidth;
-            const y = Math.random() * window.innerHeight;
-            const colors = ['#ff0000', '#ff69b4', '#ffd700', '#ff1493', '#db7093', '#ff00ff', '#ffff00', '#00ffff'];
-            for (let i = 0; i < 100; i++) {
-                const conf = document.createElement('div');
-                conf.className = 'confetti';
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                conf.style.backgroundColor = color;
-                conf.style.left = `${x}px`;
-                conf.style.top = `${y}px`;
-                const rot = Math.random() * 360;
-                const rotEnd = rot + (Math.random() * 720 - 360);
-                conf.style.setProperty('--rot', `${rot}deg`);
-                conf.style.setProperty('--rot-end', `${rotEnd}deg`);
-                const dx = (Math.random() - 0.5) * 400;
-                const dy = (Math.random() - 0.5) * 400;
-                conf.style.setProperty('--dx', `${dx}px`);
-                conf.style.setProperty('--dy', `${dy}px`);
-                document.body.appendChild(conf);
-                setTimeout(() => conf.remove(), 2000);
-            }
-        }
-
-        // Add this to CSS via script or directly, but since dynamic color, use var
-        const style = document.createElement('style');
-        style.innerHTML = `
-            .firework:before, .firework:after {
-                background-color: var(--heart-color, #ff69b4);
-                width: 100%;
-                height: 100%;
-                top: var(--before-top, -5px);
-                left: var(--after-left, 0);
-            }
-            .firework:after {
-                left: var(--after-left, -5px);
-                top: 0;
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Add floating heart animations
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.style.left = `${Math.random() * 100}vw`;
-            heart.style.animationDuration = `${Math.random() * 3 + 3}s`; // 3-6 seconds
-            heart.style.width = `${Math.random() * 10 + 10}px`; // 10-20px
-            heart.style.height = heart.style.width;
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 6000);
-        }
-
-        setInterval(createHeart, 300); // Create a new heart every 300ms
-    </script>
 </body>
 </html>
